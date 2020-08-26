@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  variables:
+    CX_SERVER: "http://555c502a8fe5.ngrok.io" 
+    CX_TEAM: "CxServer"
+    CX_PROJECT_NAME: "WebGoat-Legacy"
+    CX_PRESET: "Checkmarx Default"
+    CX_HIGH: 1
+    CX_MEDIUM: 2
+    CX_LOW: 3
+    SCA_ACCOUNT: "SCA-Champions"
+    SCA_USERNAME: "cxdemosg@gmail.com"
+    SCA_HIGH: 1
+    SCA_MEDIUM: 2
+    SCA_LOW: 3
+  parameter-store:
+    CX_TOKEN: "CXTOKEN"
+    SCA_PASSWORD: "SCAPASSWORD"
+    
+phases: 
+  install: 
+    runtime-versions: 
+      java: openjdk11 
+  build:
+    commands:
+      - mvn clean package
+  post_build: 
+    commands: 
+      - wget -O ~/cxcli.zip https://download.checkmarx.com/9.0.0/Plugins/CxConsolePlugin-2020.3.1.zip
+      - unzip ~/cxcli.zip -d ~/cxcli 
+      - rm -rf ~/cxcli.zip 
+      - chmod +x ~/cxcli/runCxConsole.sh 
+      - ~/cxcli/runCxConsole.sh Scan -verbose -CxServer $CX_SERVER -CxToken $CX_TOKEN -ProjectName "$CX_TEAM\\$CX_PROJECT_NAME" -preset "$CX_PRESET" -LocationType folder -LocationPath "$CODEBUILD_SRC_DIR" -SASTHigh $CX_HIGH -SASTMedium $CX_MEDIUM -SASTLow $CX_LOW -enableSca -scaAccount $SCA_ACCOUNT -scaUsername $SCA_USERNAME -scaPassword $SCA_PASSWORD scahigh $SCA_HIGH -scamedium $SCA_MEDIUM -scalow $SCA_LOW
+
