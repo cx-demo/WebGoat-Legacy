@@ -23,5 +23,4 @@ COPY target/WebGoat-${WEBGOAT_VERSION}-war-exec.jar /home/webgoat/webgoat.jar
 EXPOSE 9000
 
 WORKDIR /home/webgoat
-CMD java -javaagent:/cx-agent/cx-launcher.jar -Xverify:none -DcxScanTag=${IAST_SCANTAG} -jar /home/webgoat/webgoat
-.jar -httpPort 9000
+CMD java -javaagent:/cx-agent/cx-launcher.jar -Xverify:none -DcxScanTag=${IAST_SCANTAG} -jar /home/webgoat/webgoat.jar -httpPort 9000
