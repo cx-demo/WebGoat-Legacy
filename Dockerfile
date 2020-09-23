@@ -14,13 +14,13 @@ RUN apk add ca-certificates libstdc++ glib curl unzip
 USER webgoat
 
 RUN curl -o cxiast-java-agent.zip http://${IAST_URL}/iast/compilation/download/JAVA && \
-    unzip cxiast-java-agent.zip -d /opt/cxiast-java-agent && \
+    unzip cxiast-java-agent.zip -d /home/webgoat/cxiast-java-agent && \
     rm -rf cxiast-java-agent.zip && \
-    chmod +x /opt/cxiast-java-agent/cx-launcher.jar
+    chmod +x /home/webgoat/cxiast-java-agent/cx-launcher.jar
 
 COPY target/WebGoat-${WEBGOAT_VERSION}-war-exec.jar /home/webgoat/webgoat.jar
 
 EXPOSE 9000
 
 WORKDIR /home/webgoat
-CMD java -javaagent:/cx-agent/cx-launcher.jar -Xverify:none -DcxScanTag=${IAST_SCANTAG} -jar /home/webgoat/webgoat.jar -httpPort 9000
+CMD java -javaagent:/home/webgoat/cxiast-java-agent/cx-launcher.jar -Xverify:none -DcxScanTag=${IAST_SCANTAG} -jar /home/webgoat/webgoat.jar -httpPort 9000
